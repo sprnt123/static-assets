@@ -35,10 +35,14 @@ export default {
 			return new Response(JSON.stringify({ Version: Number(String(Version).replace(/\D+/g, '')) }), { status: 200, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
 		} else if (管理员密码 && upgradeHeader === 'websocket') {// WebSocket代理
 			await 反代参数获取(url);
+			// 读取配置以获取出口代理设置
+			await 读取config_JSON(env, host, userID, UA);
 			log(`[WebSocket] 命中请求: ${url.pathname}${url.search}`);
 			return await 处理WS请求(request, userID, url);
 		} else if (管理员密码 && !访问路径.startsWith('admin/') && 访问路径 !== 'login' && request.method === 'POST') {// gRPC/XHTTP代理
 			await 反代参数获取(url);
+			// 读取配置以获取出口代理设置
+			await 读取config_JSON(env, host, userID, UA);
 			const referer = request.headers.get('Referer') || '';
 			const 命中XHTTP特征 = referer.includes('x_padding', 14) || referer.includes('x_padding=');
 			if (!命中XHTTP特征 && contentType.startsWith('application/grpc')) {
